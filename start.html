@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Boss - Start</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="start-screen">
+
+  <div class="slides-container">
+    <div class="slide" id="slide0">
+      <img src="images/shopping_bag_man_pixian_ai.png" alt="Mannequin">
+      <p>Can you survive a few spins on the dreaded Wheel of Budget Boss?</p>
+    </div>
+
+    <div class="slide" id="slide1">
+      <img src="images/shopping_bag_man_pixian_ai.png" alt="Mannequin">
+      <p>Your goal: Pick shirts and bottoms wisely to stay under budget. Expensive items are tempting, but can you afford them?</p>
+    <p class="tip">💡 Tip: Always check the price tag! Knowing the cost helps you make smart choices.</p>
+
+    </div>
+
+    <div class="slide" id="slide2">
+      <img src="images/shopping_bag_man_pixian_ai.png" alt="Mannequin">
+      <p>Watch your total spent at the top of the screen. Go over budget and you can’t submit your outfit!</p>
+    <p class="tip">💡 Did you know? Creating a budget means planning how to spend your money wisely.</p>
+
+    </div>
+
+    <div class="slide" id="slide3">
+      <img src="images/shopping_bag_man_pixian_ai.png" alt="Mannequin">
+      <p>Each outfit choice has a cost. Mix and match carefully! Are you ready to spin the wheel?</p>
+    <p class="tip">💡 Smart shoppers compare prices and look for the best value, not just the cheapest or most expensive items.</p>
+
+    </div>
+
+<div class="slide" id="slide4">
+  <img src="images/shopping_bag_man_pixian_ai.png" alt="Clothing Info" style="width:250px; margin-bottom:20px;">
+  
+  <p style="font-size:1.5rem; line-height:2rem; text-align:left; max-width:600px; margin:auto;">
+    <strong>Clothing is essential for every household member!</strong><br><br>
+    - Clothing tends to wear out quickly, especially children's items and work clothes.<br>
+    - It's easy to get carried away while shopping online. Consider setting a monthly limit.<br>
+    - You may splurge on a designer item, but most clothes can be found at affordable stores.<br><br>
+    <strong>DID YOU KNOW?</strong> The average family in America spends <strong>$2,000 per year</strong> on clothing!<br>
+    Items in this category typically cost <strong>$22–$110 per month</strong>, and most people budget between <strong>2%–5% of their monthly income</strong>.
+  </p>
+</div>
+
+    <div class="slide-controls">
+    <button id="prevBtn">← Previous</button>
+    <button id="nextBtn">Next</button>
+    </div> 
+
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 5;
+
+    function showSlide(index) {
+      for (let i = 0; i < totalSlides; i++) {
+        document.getElementById(`slide${i}`).style.display = 'none';
+      }
+      document.getElementById(`slide${index}`).style.display = 'flex';
+    document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-block';
+
+    }
+
+    document.getElementById('nextBtn').onclick = () => {
+      currentSlide++;
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide);
+      } else {
+        window.location.href = 'wheel.html';
+      }
+
+    }
+
+    document.getElementById('prevBtn').onclick = () => {
+  if (currentSlide > 0) {
+    currentSlide--;
+    showSlide(currentSlide);
+  }
+}
+
+
+    showSlide(currentSlide);
+  </script>
+
+</body>
+</html>
