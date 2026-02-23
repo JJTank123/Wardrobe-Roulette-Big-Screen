@@ -52,14 +52,14 @@ const clothingItems = [
   name: "Budget Pick: Tops",
   category: "top",
   price: 35,
-  images: ["budget_pick1.png","budget_pick2.png","budget_pick3.png"]
+  images: ["images/Budget_Pick/budget_pick1.png","images/Budget_Pick/budget_pick2.png","images/Budget_Pick/budget_pick3.png"]
 },
 {
   name: "Smart Choice: Tops",
   category: "top",
   price: 65,
    yOffset: -20,
-  images: ["smart_choice1.png","smart_choice2.png","smart_choice3.png"]
+  images: ["images/Smart_Pick/smart_choice1.png","images/Smart_Pick/smart_choice2.png","images/Smart_Pick/smart_choice3.png"]
 },
 {
   name: "Luxury Choice: Tops",
@@ -117,9 +117,21 @@ document.addEventListener("DOMContentLoaded", () => {
 ====================================================== */
 
 function initWheel() {
-  drawWheel();
+  resizeWheelCanvas();
+  window.addEventListener("resize", resizeWheelCanvas);
 }
 
+function resizeWheelCanvas() {
+  const canvas = document.getElementById("wheel");
+  if (!canvas) return;
+
+  const size = canvas.parentElement.clientWidth;
+
+  canvas.width = size;
+  canvas.height = size;
+
+  drawWheel();
+}
 
 function drawWheel() {
 
@@ -160,8 +172,7 @@ ctx.textAlign = "right";
 ctx.textBaseline = "middle";
 
 ctx.fillStyle = "#222";
-ctx.font = "bold 44px Fredoka";
-ctx.letterSpacing = "2px";
+ctx.font = `bold ${radius * 0.18}px Fredoka`;ctx.letterSpacing = "2px";
 
 /* white outline for game look */
 ctx.lineWidth = 4;
