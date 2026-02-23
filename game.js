@@ -10,32 +10,21 @@
 const layerAnchors = {
   top: {
     top: 20,
-    left: 0,
-    width:70
+    width: 220,
+    height: 160
   },
   bottom: {
-    top: 150,
-    left: 40,
-    width: 60
-  },
-  shoes: {
-    top: 220,
-    left: 0,
-    width: 100
-  },
-  outerwear: {
-    top: 15,
-    left: 0,
-    width: 100
+    top: 170,
+    width: 200,
+    height: 180
   }
 };
 // Controls visual stacking order
 const layerOrder = {
-  shoes: 1,
-  bottom: 2,
-  top: 3,
-  outerwear: 4,
-  accessory: 5
+
+  bottom:1,
+  top: 2,
+
 };
 // Vertical positioning for each clothing category
 const layerOffsets = {
@@ -60,30 +49,44 @@ let currentColors = [];     // color index per clothing item
 
 const clothingItems = [
 {
-  name: "T-Shirt",
+  name: "Budget Pick: Tops",
   category: "top",
   price: 35,
-  images: ["tshirt1-1.png","tshirt1-2.png","tshirt1-3.png"]
+  images: ["images/Budget_Pick/budget_pick1.png","images/Budget_Pick/budget_pick2.png","images/Budget_Pick/budget_pick3.png"]
 },
 {
-  name: "Long Sleeve",
+  name: "Smart Choice: Tops",
   category: "top",
   price: 65,
    yOffset: -20,
-  images: ["tshirt2-1.png","tshirt2-2.png","tshirt2-3.png"]
+  images: ["images/Smart_Pick/smart_choice1.png","images/Smart_Pick/smart_choice2.png","images/Smart_Pick/smart_choice3.png"]
 },
 {
-  name: "Polo Shirt",
+  name: "Luxury Choice: Tops",
   category: "top",
    yOffset: -8,
   price: 110,
-  images: ["tshirt3-1.png","tshirt3-2.png","tshirt3-3.png"]
+  images: ["images/Luxury_Pick/luxury_pick1.png","images/Luxury_Pick/luxury_pick2.png","images/Luxury_Pick/luxury_pick3.png"]
 },
 {
-  name: "Bottoms",
+  name: "Budget Pick: Bottoms",
   category: "bottom",
   price: 35,
-  images: ["jeans1.png","jeans2.png","jeans3.png"]
+  images: ["images/Budget_Pick/budget_pants1.png","images/Budget_Pick/budget_pants2.png","images/Budget_Pick/budget_pants3.png"]
+}
+,
+{
+  name: "Smart Choice: Bottoms",
+  category: "bottom",
+  price: 65,
+  images: ["images/Smart_Pick/smart_pants1.png","images/Smart_Pick/smart_pants2.png","images/Smart_Pick/smart_pants3.png"]
+}
+,
+{
+  name: "Luxury Pick: Bottoms",
+  category: "bottom",
+  price: 110,
+  images: ["images/Luxury_Pick/luxury_pants1.png","images/Luxury_Pick/luxury_pants2.png","images/Luxury_Pick/luxury_pants3.png"]
 }
 ];
 
@@ -94,17 +97,19 @@ const clothingItems = [
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // INDEX PAGE (wheel exists)
+  // Wheel page
   if (document.getElementById("wheel")) {
+    document.fonts.ready.then(initWheel);
     initWheel();
   }
 
-  // GAME PAGE (rack exists)
+  // Game page
   if (document.getElementById("itemsContainer")) {
     initGame();
   }
 
 });
+
 
 
 /* ======================================================
@@ -115,6 +120,7 @@ function initWheel() {
   drawWheel();
 }
 
+
 function drawWheel() {
 
   const canvas = document.getElementById("wheel");
@@ -123,8 +129,10 @@ function drawWheel() {
   const ctx = canvas.getContext("2d");
   const colors = ["#FF6384","#36A2EB","#FFCE56","#8BC34A"];
 
-  const center = canvas.width / 2;
-  const radius = canvas.width / 2;
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+const radius = Math.min(centerX, centerY);
+
   const angleStep = (2 * Math.PI) / budgets.length;
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -134,30 +142,44 @@ function drawWheel() {
     const startAngle = i * angleStep;
 
     ctx.beginPath();
-    ctx.moveTo(center, center);
-    ctx.arc(center, center, radius, startAngle, startAngle + angleStep);
+ctx.moveTo(centerX, centerY);
+ctx.arc(centerX, centerY, radius, startAngle, startAngle + angleStep);
+
     ctx.fillStyle = colors[i % colors.length];
     ctx.fill();
     ctx.stroke();
 
     // text
-    ctx.save();
-    ctx.translate(center, center);
-    ctx.rotate(startAngle + angleStep / 2);
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#000";
-    ctx.font = "bold 18px Arial";
-    ctx.fillText("$" + value, radius - 10, 0);
-    ctx.restore();
+// text
+ctx.save();
+
+ctx.translate(centerX, centerY);
+ctx.rotate(startAngle + angleStep / 2);
+
+ctx.textAlign = "right";
+ctx.textBaseline = "middle";
+
+ctx.fillStyle = "#222";
+ctx.font = "bold 44px Fredoka";
+ctx.letterSpacing = "2px";
+
+/* white outline for game look */
+ctx.lineWidth = 4;
+ctx.strokeStyle = "white";
+ctx.strokeText("$" + value, radius - 25, 0);
+
+
+
+ctx.fillText("$" + value, radius - 25, 0);
+
+ctx.restore();
+
   });
 }
 
-
 function spinWheel() {
-
   const canvas = document.getElementById("wheel");
   if (!canvas || spinning) return;
-
   spinning = true;
 
   const segments = budgets.length;
@@ -166,30 +188,78 @@ function spinWheel() {
   const selectedIndex = Math.floor(Math.random() * segments);
   budget = budgets[selectedIndex];
 
-  const rotationToSlice =
-    (selectedIndex * segmentAngle) + (segmentAngle / 2);
+  const rotationToSlice = (selectedIndex * segmentAngle) + (segmentAngle / 2);
+  const totalRotations = 5; 
+  const finalRotation = totalRotations * 360 + (270 - rotationToSlice); // pointer at top
 
-  const totalRotation = (360 * 5) + (270 - rotationToSlice);
+  let start = null;
+  function animate(timestamp) {
+    if (!start) start = timestamp;
+    const elapsed = timestamp - start;
 
-  canvas.style.transition =
-    "transform 4s cubic-bezier(.15,.85,.25,1)";
+    const t = Math.min(elapsed / 4000, 1); // 4s
+    const ease = 1 - Math.pow(1 - t, 3); // cubic ease-out
 
-  canvas.style.transform = `rotate(${totalRotation}deg)`;
+    canvas.style.transform = `rotate(${ease * finalRotation}deg)`;
 
-  setTimeout(() => {
+    if (t < 1) requestAnimationFrame(animate);
+    else {
+      document.getElementById("budgetDisplay").innerText = "Your Budget: $" + budget;
+      document.getElementById("startGameBtn").style.display = "inline-block";
+      localStorage.setItem("budget", budget);
+      spinning = false;
+    }
+  }
 
-    document.getElementById("budgetDisplay").innerText =
-      "Your Budget: $" + budget;
-
-    document.getElementById("startGameBtn").style.display =
-      "inline-block";
-
-    localStorage.setItem("budget", budget);
-
-    spinning = false;
-
-  }, 4000);
+  requestAnimationFrame(animate);
 }
+
+
+function pointerBounce() {
+  const pointer = document.getElementById('stopper');
+  pointer.style.transform = 'translateX(-50%) translateY(-10px)';
+  setTimeout(() => {
+    pointer.style.transform = 'translateX(-50%) translateY(0)';
+  }, 100);
+}
+
+function launchConfetti() {
+  const confettiContainer = document.createElement('div');
+  confettiContainer.style.position = 'fixed';
+  confettiContainer.style.top = 0;
+  confettiContainer.style.left = 0;
+  confettiContainer.style.width = '100%';
+  confettiContainer.style.height = '100%';
+  confettiContainer.style.pointerEvents = 'none';
+  document.body.appendChild(confettiContainer);
+
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.position = 'absolute';
+    confetti.style.width = '8px';
+    confetti.style.height = '8px';
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+    confetti.style.top = '0px';
+    confetti.style.left = `${Math.random() * window.innerWidth}px`;
+    confetti.style.opacity = 1;
+    confetti.style.transform = `rotate(${Math.random()*360}deg)`;
+    confettiContainer.appendChild(confetti);
+
+    const fall = confetti.animate([
+      { transform: `translateY(0px) rotate(${Math.random()*360}deg)`, opacity: 1 },
+      { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random()*720}deg)`, opacity: 0 }
+    ], {
+      duration: 2000 + Math.random() * 1000,
+      easing: 'ease-out',
+      iterations: 1
+    });
+
+    fall.onfinish = () => confetti.remove();
+  }
+
+  setTimeout(() => confettiContainer.remove(), 3000);
+}
+
 
 
 function startGame() {
@@ -315,29 +385,35 @@ function selectItem(index) {
   const mannequinLayer =
     document.getElementById("mannequinLayer");
 
+// Remove old slot if exists
+const oldLayer = document.getElementById("layer-" + category);
+if (oldLayer) oldLayer.remove();
+
+const anchor = layerAnchors[item.category];
+
+// ---------- SLOT ----------
+const slot = document.createElement("div");
+slot.id = "layer-" + item.category;
+slot.style.position = "absolute";
+slot.style.left = "50%";
+slot.style.transform = "translateX(-50%)";
+slot.style.top = anchor.top + "px";
+slot.style.width = anchor.width + "px";
+slot.style.height = anchor.height + "px";
+slot.style.zIndex = layerOrder[item.category] || 1;
+slot.style.pointerEvents = "none";
+
+// ---------- IMAGE ----------
 const img = document.createElement("img");
 img.src = item.images[currentColors[index]];
-img.id = "layer-" + item.category;
 
-img.style.position = "absolute";
-img.style.zIndex = layerOrder[item.category] || 1;
+img.style.width = "100%";
+img.style.height = "100%";
+img.style.objectFit = "contain"; // ⭐ MAGIC LINE
 
-// ⭐ apply anchor positioning
-const anchor = layerAnchors[item.category];
-if (anchor) {
-  const offset = item.yOffset || 0;
-  img.style.top = anchor.top + offset + "px";
-  img.style.left = "50%";
-  img.style.transform = "translateX(-50%)";
+slot.appendChild(img);
+mannequinLayer.appendChild(slot);
 
-  // All shirts same width
-  img.style.width = anchor.width + "%";
-
-  img.style.height = "auto"; // maintain aspect ratio
-}
-
-
-mannequinLayer.appendChild(img);
 
   updateTotal();
 }
@@ -418,9 +494,9 @@ function initGame() {
   const submitBtn = document.getElementById("submitBtn");
   if (submitBtn) {
     submitBtn.disabled = true; // prevent clicks
-    submitBtn.innerText = "Wait 60 seconds..."; // show countdown text
+    submitBtn.innerText = "Wait 30 seconds..."; // show countdown text
 
-    let timeLeft = 10;
+    let timeLeft = 30;
     const timer = setInterval(() => {
       timeLeft--;
       submitBtn.innerText = `Wait ${timeLeft} seconds...`;
@@ -443,3 +519,4 @@ function backToWheel() {
   // Go back to wheel page
   window.location.href = "wheel.html";
 }
+
