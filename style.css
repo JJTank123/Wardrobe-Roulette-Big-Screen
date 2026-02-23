@@ -204,20 +204,100 @@ button:hover {
 
 /* Wheel Page */
 body.wheel-page {
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;  /* vertical center */
-  align-items: center;      /* horizontal center */
-  min-height: 100vh;
+  font-family: 'Fredoka', sans-serif;
   margin: 0;
-  font-family: 'Trebuchet MS', sans-serif;
-  color: #000;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.wheel-layout {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  width: 90%;
+  max-width: 1100px;
+}
+
+.wheel-info {
+  background: white;
+  padding: 45px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  text-align: center;
+  width: 360px;
+}
+
+.wheel-info h1 {
+  font-size: 3rem;
+  color: #ff4f81;
+  margin-bottom: 10px;
+
+  text-shadow:
+    3px 3px 0 #fff,
+    6px 6px 12px rgba(0,0,0,0.25);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+.spin-btn,
+.start-btn {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 15px 28px;
+  margin-top: 10px;
+
+  background: linear-gradient(45deg,#ff4f81,#ff7eb3);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 0 #c93a66,
+    0 12px 20px rgba(0,0,0,0.3);
+
+  transition: all 0.15s ease;
+}
+
+.spin-btn:hover,
+.start-btn:hover {
+  transform: scale(1.05);
+}
+
+.spin-btn:active,
+.start-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #c93a66,
+    0 6px 10px rgba(0,0,0,0.3);
+}
+
+.budget-text {
+  font-size: 1.6rem;
+  margin-top: 20px;
+  color: #333;
+  font-weight: bold;
 }
 
 body.wheel-page .container {
   background: white;
-  padding: 30px 40px;
+  padding: 50px 60px;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   text-align: center;
@@ -226,26 +306,86 @@ body.wheel-page .container {
 
 .wheel-container {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 600px;
+  height: 600px;
   margin: auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  filter: drop-shadow(0 0 25px rgba(255,255,255,0.6));
 }
+
 
 #wheel {
   display: block;
   margin: auto;
+  filter: drop-shadow(0 0 25px rgba(255,255,255,0.6));
+  border-radius: 50%;
+  transition: transform 0.1s linear;
+}
+
+
+@keyframes idleSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 #stopper {
   position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 30px;
-  color: #444;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  z-index: 10;
+  top: -30px;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  width: fit-content;
+  font-size: 48px;
+  color: #ff4f81;
+
+  text-shadow:
+    0 0 10px white,
+    0 0 20px white;
+
+  animation: bounce 1s infinite alternate;
 }
+
+
+@keyframes bounce {
+  from { transform: translate(-50%,0); }
+  to   { transform: translate(-50%,6px); }
+}
+
+
+.bg-decor::before,
+.bg-decor::after {
+  content: "";
+  position: fixed;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  filter: blur(50px);
+  animation: floaty 8s ease-in-out infinite;
+}
+
+.bg-decor::before {
+  top: 10%;
+  left: 5%;
+}
+
+.bg-decor::after {
+  bottom: 10%;
+  right: 5%;
+  animation-delay: 4s;
+}
+
+@keyframes floaty {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+
+
 
 /* START SCREEN */
 body.start-screen {
@@ -337,3 +477,26 @@ body.start-screen {
   transform: scale(1.1);
 }
 
+
+
+body.wheel-page button {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 15px 28px;
+
+  background: linear-gradient(45deg,#ff4f81,#ff7eb3);
+  border-radius: 30px;
+
+  box-shadow:
+    0 6px 0 #c93a66,
+    0 10px 20px rgba(0,0,0,0.3);
+
+  transition: all 0.15s ease;
+}
+
+body.wheel-page button:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #c93a66,
+    0 6px 10px rgba(0,0,0,0.3);
+}
