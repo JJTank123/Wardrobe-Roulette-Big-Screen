@@ -52,41 +52,41 @@ const clothingItems = [
   name: "Budget Pick: Tops",
   category: "top",
   price: 35,
-  images: ["images/Budget_Pick/budget_pick1.png","images/Budget_Pick/budget_pick2.png","images/Budget_Pick/budget_pick3.png"]
+  images: ["budget_pick1.png","budget_pick2.png","budget_pick3.png"]
 },
 {
   name: "Smart Choice: Tops",
   category: "top",
   price: 65,
    yOffset: -20,
-  images: ["images/Smart_Pick/smart_choice1.png","images/Smart_Pick/smart_choice2.png","images/Smart_Pick/smart_choice3.png"]
+  images: ["smart_choice1.png","mart_choice2.png","smart_choice3.png"]
 },
 {
   name: "Luxury Choice: Tops",
   category: "top",
    yOffset: -8,
   price: 110,
-  images: ["images/Luxury_Pick/luxury_pick1.png","images/Luxury_Pick/luxury_pick2.png","images/Luxury_Pick/luxury_pick3.png"]
+  images: ["luxury_pick1.png","luxury_pick2.png","luxury_pick3.png"]
 },
 {
   name: "Budget Pick: Bottoms",
   category: "bottom",
   price: 35,
-  images: ["images/Budget_Pick/budget_pants1.png","images/Budget_Pick/budget_pants2.png","images/Budget_Pick/budget_pants3.png"]
+  images: ["budget_pants1.png","budget_pants2.png","budget_pants3.png"]
 }
 ,
 {
   name: "Smart Choice: Bottoms",
   category: "bottom",
   price: 65,
-  images: ["images/Smart_Pick/smart_pants1.png","images/Smart_Pick/smart_pants2.png","images/Smart_Pick/smart_pants3.png"]
+  images: ["smart_pants1.png","smart_pants2.png","smart_pants3.png"]
 }
 ,
 {
   name: "Luxury Pick: Bottoms",
   category: "bottom",
   price: 110,
-  images: ["images/Luxury_Pick/luxury_pants1.png","images/Luxury_Pick/luxury_pants2.png","images/Luxury_Pick/luxury_pants3.png"]
+  images: ["luxury_pants1.png","luxury_pants2.png","luxury_pants3.png"]
 }
 ];
 
