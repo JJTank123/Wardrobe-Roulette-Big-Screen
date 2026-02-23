@@ -500,31 +500,3 @@ body.wheel-page button:active {
     0 2px 0 #c93a66,
     0 6px 10px rgba(0,0,0,0.3);
 }
-
-/* =========================
-   iPad / Tablet Responsive
-========================= */
-
-.wheel-layout {
-  flex-wrap: wrap;          /* allows stacking */
-  justify-content: center;
-  gap: 40px;
-}
-
-/* Wheel scales with screen */
-.wheel-container {
-  width: min(80vw, 500px);
-  height: min(80vw, 500px);
-}
-
-/* Canvas fills container */
-#wheel {
-  width: 100%;
-  height: 100%;
-}
-
-/* Smaller info panel on tablets */
-.wheel-info {
-  width: min(90vw, 360px);
-  padding: 30px;
-}
