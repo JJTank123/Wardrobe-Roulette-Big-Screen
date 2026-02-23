@@ -59,7 +59,7 @@ const clothingItems = [
   category: "top",
   price: 65,
    yOffset: -20,
-  images: ["smart_choice1.png","mart_choice2.png","smart_choice3.png"]
+  images: ["smart_choice1.png","smart_choice2.png","smart_choice3.png"]
 },
 {
   name: "Luxury Choice: Tops",
