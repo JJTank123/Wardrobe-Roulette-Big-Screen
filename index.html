@@ -11,7 +11,7 @@
   <div class="slides-container">
     <div class="slide" id="slide0">
       <img src="shopping_bag_man_pixian_ai.png" alt="Mannequin">
-      <p>Can you survive a few spins of the Wardrobe Roulett"?</p>
+      <p>Can you survive a few spins of the Wardrobe Roulette?</p>
     </div>
 
     <div class="slide" id="slide1">
@@ -59,14 +59,20 @@
     let currentSlide = 0;
     const totalSlides = 5;
 
-    function showSlide(index) {
-      for (let i = 0; i < totalSlides; i++) {
-        document.getElementById(`slide${i}`).style.display = 'none';
-      }
-      document.getElementById(`slide${index}`).style.display = 'flex';
-    document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-block';
+function showSlide(index) {
+  for (let i = 0; i < totalSlides; i++) {
+    const slide = document.getElementById(`slide${i}`);
+    slide.style.display = 'none';
+    slide.classList.remove('active');
+  }
 
-    }
+  const activeSlide = document.getElementById(`slide${index}`);
+  activeSlide.style.display = 'flex';
+  activeSlide.classList.add('active');
+
+  document.getElementById('prevBtn').style.display =
+    index === 0 ? 'none' : 'inline-block';
+}
 
     document.getElementById('nextBtn').onclick = () => {
       currentSlide++;
