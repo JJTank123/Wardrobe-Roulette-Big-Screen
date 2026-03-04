@@ -49,7 +49,7 @@ let currentColors = [];     // color index per clothing item
 
 const clothingItems = [
 {
-  name: "Budget Pick: Tops",
+  name: "Basic Pick: Tops",
   category: "top",
   price: 35,
   width: 360,
@@ -57,7 +57,7 @@ const clothingItems = [
   images: ["budget_pick1.png","budget_pick2.png","budget_pick3.png"]
 },
 {
-  name: "Smart Choice: Tops",
+  name: "Standard Choice: Tops",
   category: "top",
   price: 65,
    yOffset: -20,
@@ -71,14 +71,14 @@ const clothingItems = [
   images: ["luxury_pick1.png","luxury_pick2.png","luxury_pick3.png"]
 },
 {
-  name: "Budget Pick: Bottoms",
+  name: "Basic Pick: Bottoms",
   category: "bottom",
   price: 35,
   images: ["budget_pants1.png","budget_pants2.png","budget_pants3.png"]
 }
 ,
 {
-  name: "Smart Choice: Bottoms",
+  name: "Standard Choice: Bottoms",
   category: "bottom",
   price: 65,
   images: ["smart_pants1.png","smart_pants2.png","smart_pants3.png"]
