@@ -9,14 +9,14 @@
 // Exact placement anchors for mannequin layers
 const layerAnchors = {
   top: {
-    top: 20,
-    width: 220,
-    height: 160
+    top: 5,
+    width: 400,
+    height:250
   },
   bottom: {
-    top: 170,
-    width: 200,
-    height: 180
+    top: 270,
+    width: 400,
+    height: 250
   }
 };
 // Controls visual stacking order
@@ -52,6 +52,8 @@ const clothingItems = [
   name: "Budget Pick: Tops",
   category: "top",
   price: 35,
+  width: 360,
+  height: 230,
   images: ["budget_pick1.png","budget_pick2.png","budget_pick3.png"]
 },
 {
@@ -116,157 +118,76 @@ document.addEventListener("DOMContentLoaded", () => {
    WHEEL PAGE LOGIC
 ====================================================== */
 
-function initWheel() {
-  drawWheel();
-}
+// ============================================
+// WARDROBE ROULETTE – WHEEL LOGIC
+// ============================================
 
+const wheel = document.getElementById("wheel");
+const spinBtn = document.getElementById("spinBtn");
+const budgetDisplay = document.getElementById("budgetDisplay");
+const startGameBtn = document.getElementById("startGameBtn");
 
-function drawWheel() {
+// Wheel values (must match HTML order)
+const wheelValues = [70, 220, 90, 180, 120, 150];
 
-  const canvas = document.getElementById("wheel");
-  if (!canvas) return;
+let currentRotation = 0;
 
-  const ctx = canvas.getContext("2d");
-  const colors = ["#FF6384","#36A2EB","#FFCE56","#8BC34A"];
-
-const centerX = canvas.width / 2;
-const centerY = canvas.height / 2;
-const radius = Math.min(centerX, centerY);
-
-  const angleStep = (2 * Math.PI) / budgets.length;
-
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  budgets.forEach((value, i) => {
-
-    const startAngle = i * angleStep;
-
-    ctx.beginPath();
-ctx.moveTo(centerX, centerY);
-ctx.arc(centerX, centerY, radius, startAngle, startAngle + angleStep);
-
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fill();
-    ctx.stroke();
-
-    // text
-// text
-ctx.save();
-
-ctx.translate(centerX, centerY);
-ctx.rotate(startAngle + angleStep / 2);
-
-ctx.textAlign = "right";
-ctx.textBaseline = "middle";
-
-ctx.fillStyle = "#222";
-ctx.font = "bold 44px Fredoka";
-ctx.letterSpacing = "2px";
-
-/* white outline for game look */
-ctx.lineWidth = 4;
-ctx.strokeStyle = "white";
-ctx.strokeText("$" + value, radius - 25, 0);
-
-
-
-ctx.fillText("$" + value, radius - 25, 0);
-
-ctx.restore();
-
-  });
-}
+spinBtn.addEventListener("click", spinWheel);
 
 function spinWheel() {
-  const canvas = document.getElementById("wheel");
-  if (!canvas || spinning) return;
+  if (spinning) return;
+
   spinning = true;
+  spinBtn.style.pointerEvents = "none";
 
-  const segments = budgets.length;
-  const segmentAngle = 360 / segments;
+  const sliceCount = wheelValues.length;
+  const sliceAngle = 360 / sliceCount;
 
-  const selectedIndex = Math.floor(Math.random() * segments);
-  budget = budgets[selectedIndex];
+  // Random slice index
+  const randomIndex = Math.floor(Math.random() * sliceCount);
 
-  const rotationToSlice = (selectedIndex * segmentAngle) + (segmentAngle / 2);
-  const totalRotations = 5; 
-  const finalRotation = totalRotations * 360 + (270 - rotationToSlice); // pointer at top
+  // Add multiple full spins for animation
+  const fullSpins = 360 * 6;
 
-  let start = null;
-  function animate(timestamp) {
-    if (!start) start = timestamp;
-    const elapsed = timestamp - start;
+  // Calculate final rotation
+  const finalRotation =
+    currentRotation +
+    fullSpins +
+    (randomIndex * sliceAngle);
 
-    const t = Math.min(elapsed / 4000, 1); // 4s
-    const ease = 1 - Math.pow(1 - t, 3); // cubic ease-out
+  wheel.style.transition = "transform 5s ease-out";
+  wheel.style.transform = `rotate(${finalRotation}deg)`;
 
-    canvas.style.transform = `rotate(${ease * finalRotation}deg)`;
-
-    if (t < 1) requestAnimationFrame(animate);
-    else {
-      document.getElementById("budgetDisplay").innerText = "Your Budget: $" + budget;
-      document.getElementById("startGameBtn").style.display = "inline-block";
-      localStorage.setItem("budget", budget);
-      spinning = false;
-    }
-  }
-
-  requestAnimationFrame(animate);
-}
-
-
-function pointerBounce() {
-  const pointer = document.getElementById('stopper');
-  pointer.style.transform = 'translateX(-50%) translateY(-10px)';
   setTimeout(() => {
-    pointer.style.transform = 'translateX(-50%) translateY(0)';
-  }, 100);
+    // Determine winning slice properly
+    const normalizedRotation = finalRotation % 360;
+    const winningIndex =
+      Math.floor((360 - normalizedRotation) / sliceAngle) % sliceCount;
+
+    const selectedBudget = wheelValues[winningIndex];
+
+    // Save budget
+    localStorage.setItem("gameBudget", selectedBudget);
+
+    // Show result
+    budgetDisplay.textContent = `Your budget is $${selectedBudget}!`;
+    startGameBtn.style.display = "inline-block";
+
+    // 🔥 Reset rotation cleanly (prevents distortion)
+    currentRotation = normalizedRotation;
+
+    wheel.style.transition = "none";
+    wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+    // Re-enable spin
+    spinning = false;
+    spinBtn.style.pointerEvents = "auto";
+
+  }, 5000);
 }
 
-function launchConfetti() {
-  const confettiContainer = document.createElement('div');
-  confettiContainer.style.position = 'fixed';
-  confettiContainer.style.top = 0;
-  confettiContainer.style.left = 0;
-  confettiContainer.style.width = '100%';
-  confettiContainer.style.height = '100%';
-  confettiContainer.style.pointerEvents = 'none';
-  document.body.appendChild(confettiContainer);
-
-  for (let i = 0; i < 100; i++) {
-    const confetti = document.createElement('div');
-    confetti.style.position = 'absolute';
-    confetti.style.width = '8px';
-    confetti.style.height = '8px';
-    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
-    confetti.style.top = '0px';
-    confetti.style.left = `${Math.random() * window.innerWidth}px`;
-    confetti.style.opacity = 1;
-    confetti.style.transform = `rotate(${Math.random()*360}deg)`;
-    confettiContainer.appendChild(confetti);
-
-    const fall = confetti.animate([
-      { transform: `translateY(0px) rotate(${Math.random()*360}deg)`, opacity: 1 },
-      { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random()*720}deg)`, opacity: 0 }
-    ], {
-      duration: 2000 + Math.random() * 1000,
-      easing: 'ease-out',
-      iterations: 1
-    });
-
-    fall.onfinish = () => confetti.remove();
-  }
-
-  setTimeout(() => confettiContainer.remove(), 3000);
-}
-
-
-
+// Start Game Button
 function startGame() {
-  if (budget === 0) {
-    alert("Spin first!");
-    return;
-  }
   window.location.href = "game.html";
 }
 
@@ -275,25 +196,6 @@ function startGame() {
    GAME PAGE LOGIC
 ====================================================== */
 
-function initGame() {
-
-  const savedBudget = localStorage.getItem("budget");
-
-  if (!savedBudget) {
-    alert("Spin the wheel first!");
-    window.location.href = "index.html";
-    return;
-  }
-
-  budget = parseInt(savedBudget);
-  document.getElementById("budget").innerText = budget;
-
-  currentColors = clothingItems.map(() => 0);
-
-  renderRack();
-  updateTotal();
-  
-}
 
 
 /* ---------------- RACK RENDER ---------------- */
@@ -361,6 +263,14 @@ function prevColor(index, event) {
 
 function selectItem(index) {
 
+const rackItem =
+  document.getElementById("img-" + index);
+
+rackItem.classList.add("pop");
+
+setTimeout(() =>
+  rackItem.classList.remove("pop"), 250);
+
   const item = clothingItems[index];
   const category = item.category;
 
@@ -409,9 +319,12 @@ img.src = item.images[currentColors[index]];
 
 img.style.width = "100%";
 img.style.height = "100%";
-img.style.objectFit = "contain"; // ⭐ MAGIC LINE
+img.style.objectFit = "contain";
 
+// ⭐ MISSING LINE
 slot.appendChild(img);
+
+slot.classList.add("clothing-drop");
 mannequinLayer.appendChild(slot);
 
 
@@ -428,8 +341,15 @@ function updateTotal() {
 
   totalDisplay.innerText = totalSpent;
 
-  totalDisplay.style.color =
-    totalSpent > budget ? "red" : "black";
+if (totalSpent > budget) {
+  totalDisplay.style.color = "red";
+  totalDisplay.classList.add("budget-shake");
+
+  setTimeout(() =>
+    totalDisplay.classList.remove("budget-shake"), 400);
+} else {
+  totalDisplay.style.color = "black";
+}
 }
 
 
@@ -448,6 +368,7 @@ function submitOutfit() {
     drawer.classList.remove("locked");
     drawer.classList.add("unlocked");
     drawer.innerText = "🗄️ Drawer Unlocked! Code: 371";
+    launchConfetti();
   } else {
     alert("Over budget!");
   }
@@ -519,4 +440,3 @@ function backToWheel() {
   // Go back to wheel page
   window.location.href = "wheel.html";
 }
-
